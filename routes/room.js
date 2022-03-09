@@ -8,6 +8,25 @@ var OPENVIDU_URL = process.argv[2]
 // Environment variable: secret shared with our OpenVidu server
 var OPENVIDU_SECRET = process.argv[3]
 
+// Mock database
+var users = [
+  {
+    user: "publisher1",
+    pass: "pass",
+    role: OpenViduRole.PUBLISHER,
+  },
+  {
+    user: "publisher2",
+    pass: "pass",
+    role: OpenViduRole.PUBLISHER,
+  },
+  {
+    user: "publisher3",
+    pass: "pass",
+    role: OpenViduRole.PUBLISHER,
+  },
+]
+
 // Entrypoint to OpenVidu Node Client SDK
 var OV = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET)
 
@@ -136,7 +155,9 @@ router.post("/api-sessions/remove-user", function (req, res) {
     }
   }
 })
-
+function login(user, pass) {
+  return users.find((u) => u.user === user && u.pass === pass)
+}
 function isLogged(session) {
   return session.loggedUser != null
 }
