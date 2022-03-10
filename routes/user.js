@@ -11,13 +11,11 @@ router.post("/user", async (req, res) => {
   try {
     let { nickname } = req.body
     session = req.session
-    console.log(session)
-    if (session.player) {
-      //유저 로그인하면 닉네임을 세션에 저장하여 sid 만들어줌 => cookie에 sid가 만들어지면서 토큰이 만들어짐
-      nickname = session.player
-    }
-    const user = await User.create({ nickname })
-    res.status(201).json({
+    // console.log(session)
+
+    let user = await User.create({ nickname })
+    user = session.user
+    return res.status(200).json({
       user,
     })
   } catch (err) {

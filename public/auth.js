@@ -3,8 +3,8 @@ async function login(nickname) {
     const res = await axios.post("/api/user", { nickname })
     console.log(res)
     console.log(res.data)
-    if (res.status === 201) {
-      window.location.replace("/api/dashboard")
+    if (res.status === 200) {
+      window.location.replace("/dashboard")
     }
   } catch (err) {
     console.log(err)
