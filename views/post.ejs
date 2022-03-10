@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/header.ejs') %>
+
+  <body>
+    <div class="section">
+      <%- include('../partials/nav.ejs') %>
+
+      <p>
+        <input
+          type="text"
+          name="title"
+          value="<%= posts.title%>"
+          id="title"
+          readonly
+          class="inputs"
+        />
+      </p>
+      <p>
+        <textarea name="body" id="content" readonly class="textarea-placeholder">
+<%= posts.content %></textarea
+        >
+      </p>
+      <div class="posts-placehoder">
+        <label
+          >작성날짜:
+          <span class="inputs"><%= posts.createdAt.toLocaleString('ko-KR')%></span>
+        </label>
+      </div>
+      <button
+        style="display: none"
+        type="button"
+        id="editBtn"
+        data-id="<%=posts.id%>"
+        onclick="editPost(
+     '<%= posts.id%>',
+     document.getElementById('title').value,
+     document.getElementById('content').value)"
+      >
+        수정완료
+      </button>
+      <button type="button" id="makeEditable" onclick="makeEditable()">수정</button>
+      <button
+        type="button"
+        id="delBtn"
+        data-id="<%=posts.id%>"
+        onclick="deletePost('<%=posts.id%>','<%=posts.owner%>')"
+      >
+        삭제하기
+      </button>
+      <div>------------</div>
+      <div>
+        <div>
+          <% for( let comment of commentsArray) { %>
+          <p>작성자: <span><%=comment.owner.author%></span></p>
+          <div id="element">
+            <p>작성글:<span name="comment" id="comment"><%=comment.comment%></span></p>
+            <button
+              type="button"
+              onclick="editComment('<%= comment._id%>','<%=comment.owner.id%>',document.getElementById('comment').value)"
+            >
+              수정
+            </button>
+            <button type="button" onclick="deleteComment('<%= comment._id%>')">삭제</button>
+          </div>
+          <% } %>
+        </div>
+      </div>
+      <div>_______</div>
+      <div>
+        <label for="comment">comment</label>
+        <p><input type="text" name="comment" id="comment" data-id="<%=posts.owner%>" /></p>
+        <button
+          type="button"
+          onclick="writeComment(document.getElementById('comment').value,'<%=posts.comments_id%>','<%= posts._id%>')"
+        >
+          작성
+        </button>
+      </div>
+
+      <%- include('../partials/footer.ejs') %>
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+      <script src="/edit.js"></script>
+      <script src="/posts.js"></script>
+      <script src="/comments.js"></script>
+    </div>
+  </body>
+</html>

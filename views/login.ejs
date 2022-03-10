@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/header.ejs') %>
+  <body>
+    <h1>Login Page</h1>
+    <div>
+      <div>
+        <label for="email">이메일</label>
+        <input type="email" id="email" placeholder="hello@hello.com" />
+      </div>
+      <div>
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" placeholder="비밀번호를 입력해주세요" />
+      </div>
+      <button
+        type="submit"
+        onclick="login(
+            document.getElementById('email').value,
+            document.getElementById('password').value)
+          "
+      >
+        로그인
+      </button>
+    </div>
+    <div>
+      <button><a href="/users/signup">회원가입</a></button>
+    </div>
+  </body>
+</html>

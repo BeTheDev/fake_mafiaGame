@@ -1,7 +1,7 @@
 /* CONFIGURATION */
 
-var OpenVidu = require("openvidu-node-client").OpenVidu
-var OpenViduRole = require("openvidu-node-client").OpenViduRole
+const OpenVidu = require("openvidu-node-client").OpenVidu
+const OpenViduRole = require("openvidu-node-client").OpenViduRole
 
 // Check launch arguments: must receive openvidu-server URL and the secret
 if (process.argv.length != 4) {
@@ -12,15 +12,18 @@ if (process.argv.length != 4) {
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
 // Node imports
-var express = require("express")
-var fs = require("fs")
-var session = require("express-session")
-var https = require("https")
-var bodyParser = require("body-parser") // Pull information from HTML POST (express4)
-var app = express() // Create our app with express
-const port = 4000
-const cors = require("cors")
+const express = require("express")
+const fs = require("fs")
+const session = require("express-session")
+const https = require("https")
+const bodyParser = require("body-parser") // Pull information from HTML POST (express4)
+const app = express() // Create our app with express
+const port = 5000
+const morgan = require("morgan")
+const userRouter = require("./routes/user")
+const roomRouter = require("./routes/room")
 
+app.use(morgan("dev"))
 // Server configuration
 app.use(
   session({
@@ -43,23 +46,23 @@ app.use(
 ) // Parse application/vnd.api+json as json
 app.set("view engine", "ejs") // Embedded JavaScript as template engine
 
-app.use(cors())
-
 // Listen (start app with node server.js)
 var options = {
   key: fs.readFileSync("openvidukey.pem"),
   cert: fs.readFileSync("openviducert.pem"),
 }
-https.createServer(options, app).listen(4000)
+https.createServer(options, app).listen(5000)
 
 // Mock database
 var users = [
   {
     user: "publisher1",
+    pass: "pass",
     role: OpenViduRole.PUBLISHER,
   },
   {
     user: "publisher2",
+    pass: "pass",
     role: OpenViduRole.PUBLISHER,
   },
 ]
@@ -76,79 +79,28 @@ var OV = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET)
 var mapSessions = {}
 // Collection to pair session names with tokens
 var mapSessionNamesTokens = {}
-console.log(mapSessionNamesTokens)
-
-console.log(`App listening on ${port}`)
 
 /* CONFIGURATION */
 
-/* REST API */
-app.get("/", async (req, res) => {
-  res.render("rooms")
+// connect DataBase
+const db = require("./models")
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("mafia app DB connected")
+  })
+  .catch(console.error)
+
+app.use("/api", [userRouter, roomRouter])
+
+app.get("/", (req, res) => {
+  res.send("hello world")
 })
-
-app.post("/login", loginController)
-app.get("/login", loginController)
-
-function loginController(req, res) {
-  if (req.session.loggedUser) {
-    // User is logged
-    user = req.session.loggedUser
-    res.redirect("/user")
-  } else {
-    // User is not logged
-    req.session.destroy()
-    res.render("index.ejs")
-  }
-}
-
-app.post("/logout", (req, res) => {
-  req.session.destroy()
-  res.redirect("/")
-})
-
-app.post("/user", dashboardController)
-app.get("/user", dashboardController)
-
-function dashboardController(req, res) {
-  console.log(req.session)
-  // Check if the user is already logged in
-  if (isLogged(req.session)) {
-    // User is already logged. Immediately return dashboard
-    user = req.session.loggedUser
-    res.render("dashboard.ejs", {
-      user: user,
-    })
-  } else {
-    // User wasn't logged and wants to
-
-    // Retrieve params from POST body
-    var user = req.body.user
-    console.log("Logging in | {user}={" + user + "}")
-
-    if (login(user)) {
-      // Correct user-pass
-      // Validate session and return OK
-      // Value stored in req.session allows us to identify the user in future requests
-      console.log("'" + user + "' has logged in")
-      req.session.loggedUser = user
-      res.render("dashboard.ejs", {
-        user: user,
-      })
-    } else {
-      // Wrong user-pass
-      // Invalidate session and return index template
-      console.log("'" + user + "' invalid credentials")
-      req.session.destroy()
-      res.redirect("/")
-    }
-  }
-}
 
 app.post("/session", (req, res) => {
   if (!isLogged(req.session)) {
     req.session.destroy()
-    res.redirect("/login")
+    res.redirect("/")
   } else {
     // The nickname sent by the client
     var clientData = req.body.data
@@ -156,11 +108,12 @@ app.post("/session", (req, res) => {
     var sessionName = req.body.sessionname
 
     // Role associated to this user
-    var role = users.find((u) => u.user === req.session.loggedUser).role
+    var role = users.find((u) => u.user === req.session.nickName).role
 
     // Optional data to be passed to other users when this user connects to the video-call
     // In this case, a JSON with the value we stored in the req.session object on login
     var serverData = JSON.stringify({ serverData: req.session.loggedUser })
+
     console.log("Getting a token | {sessionName}={" + sessionName + "}")
 
     // Build connectionProperties object with the serverData and the role
@@ -256,14 +209,14 @@ app.post("/leave-session", (req, res) => {
       } else {
         var msg = "Problems in the app server: the TOKEN wasn't valid"
         console.log(msg)
-        res.redirect("/user")
+        res.redirect("/dashboard")
       }
       if (tokens.length == 0) {
         // Last user left: session must be removed
         console.log(sessionName + " empty!")
         delete mapSessions[sessionName]
       }
-      res.redirect("/user")
+      res.redirect("/dashboard")
     } else {
       var msg = "Problems in the app server: the SESSION does not exist"
       console.log(msg)
@@ -276,16 +229,13 @@ app.post("/leave-session", (req, res) => {
 
 /* AUXILIARY METHODS */
 
-function login(user) {
-  return user != null && users.find((u) => u.user === user)
-}
-
-function isLogged(session) {
-  return session.loggedUser != null
-}
-
 function getBasicAuth() {
   return "Basic " + new Buffer("OPENVIDUAPP:" + OPENVIDU_SECRET).toString("base64")
 }
 
 /* AUXILIARY METHODS */
+
+// app.listen(port, () => {
+//   console.log(`server listening on ${port}`)
+// })
+module.exports = app
