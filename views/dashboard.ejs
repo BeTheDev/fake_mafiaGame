@@ -37,23 +37,22 @@
 			<div id="join" class="vertical-center">
 				<div id="img-div"><img src="images/openvidu_grey_bg_transp_cropped.png" /></div>
 				<div id="join-dialog" class="jumbotron">
-					<h1>Join a video session</h1>
+					<h1>Game</h1>
 					<form class="form-group" action="/session" method="post">
 						<p>
-							<label>Participant</label>
-							<input class="form-control" type="text" name="data" required="true"></input>
+							<label>참여자 </label>
+							<input value = "<%= user %>">
+						<span id="name-user"></span></input>
 						</p>
 						<p>
-							<label>Session</label>
+							<label>ROOMID</label>
 							<input class="form-control" type="text" name="sessionname" required="true"></input>
 						</p>
 						<p class="text-center">
 							<button class="btn btn-lg btn-success" type="submit">Join!</button>
 						</p>
 					</form>
-					<hr></hr>
 					<div id="login-info">
-						<div>Logged as <span id="name-user"><%= user %></span></div>
 						<form action="/logout" method="post">
 							<button id="logout-btn" class="btn btn-warning" type="submit">Log out</button>
 						</form>

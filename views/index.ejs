@@ -24,6 +24,9 @@
 			});
 		});
 	</script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="/auth.js"></script>
+
 </head>
 
 <body>
@@ -41,45 +44,21 @@
 
 	<div id="main-container" class="container">
 		<div id="not-logged" class="vertical-center">
-			<div id="img-div"><img src="images/openvidu_grey_bg_transp_cropped.png" /></div>
-			<form class="form-group jumbotron" action="/dashboard" method="post">
-				<p>
-					<label>User</label>
-					<input class="form-control" type="text" name="user" required="true"></input>
-				</p>
-				<p>
-					<label>Pass</label>
-					<input class="form-control" type="password" name="pass" required="true"></input>
-				</p>
-				<p class="text-center">
-					<button class="btn btn-lg btn-info" type="submit">Log in</button>
-				</p>
-			</form>
-			<table class="table">
-				<tr>
-					<th>User</th>
-					<th>Pass</th>
-					<th>Role<i data-toggle="tooltip" data-placement="bottom" title="" data-original-title="&lt;div id='tooltip-div'&gt;PUBLISHER&lt;div&gt;Send and receive media&lt;hr&gt;&lt;/div&gt;SUBSCRIBER&lt;div&gt;Receive media&lt;/div&gt;&lt;/div&gt;"
-						    class="glyphicon glyphicon-info-sign"></i></th>
-				</tr>
-				<tr>
-					<td>publisher1</td>
-					<td>pass</td>
-					<td>PUBLISHER</td>
-				</tr>
-				<tr>
-					<td>publisher2</td>
-					<td>pass</td>
-					<td>PUBLISHER</td>
-				</tr>
-				<tr>
-					<td>subscriber</td>
-					<td>pass</td>
-					<td>SUBSCRIBER</td>
-				</tr>
-			</table>
-		</div>
-	</div>
+			<div id="img-div"><img src="images/openvidu_grey_bg_transp_cropped.png" />
+			 <div>
+        <label for="user">User</label>
+        <input type="text" id="user"/>
+      </div>
+      <button
+        type="submit"
+        onclick="login(
+            document.getElementById('user').value)
+          "
+      >
+        시작하기 
+      </button>
+    </div>
+		
 
 	<footer class="footer">
 		<div class="container">
