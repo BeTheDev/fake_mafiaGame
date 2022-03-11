@@ -1,10 +1,9 @@
 <html>
-
 <head>
 	<title>openvidu-mvc-node</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8"></meta>
-	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon"></link>
+	<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"></link>
 
 	<!-- Bootstrap -->
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g="
@@ -16,7 +15,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></link>
 	<!-- Bootstrap -->
 
-	<link rel="styleSheet" href="/style.css" type="text/css" media="screen"></link>
+	<link rel="styleSheet" href="style.css" type="text/css" media="screen"></link>
 	<script>
 		$(document).ready(function () {
 			$('[data-toggle="tooltip"]').tooltip({
@@ -24,9 +23,6 @@
 			});
 		});
 	</script>
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-
-
 </head>
 
 <body>
@@ -34,18 +30,27 @@
 	<nav class="navbar navbar-default">
 		<div class="container">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="/"><img class="demo-logo" src="/images/openvidu_vert_white_bg_trans_cropped.png"/> MVC Node</a>
-				
+				<a class="navbar-brand" href="/"><img class="demo-logo" src="images/openvidu_vert_white_bg_trans_cropped.png"/> MVC Node</a>
+				<a class="navbar-brand nav-icon" href="https://github.com/OpenVidu/openvidu-tutorials/tree/master/openvidu-mvc-node" title="GitHub Repository"
+				    target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a>
+				<a class="navbar-brand nav-icon" href="http://www.docs.openvidu.io/en/stable/tutorials/openvidu-mvc-node/" title="Documentation" target="_blank"><i class="fa fa-book" aria-hidden="true"></i></a>
 			</div>
 		</div>
 	</nav>
 
 	<div id="main-container" class="container">
 		<div id="not-logged" class="vertical-center">
+			<div id="img-div"><img src="images/openvidu_grey_bg_transp_cropped.png" /></div>
+			
+				
+	<div id="main-container" class="container form-group jumbotron"">
+		<div id="not-logged" class="vertical-center">
 			<div >
 			 <div>
+				 <p>
         <label for="nickname">nickname</label>
         <input type="text" id="nickname"/>
+				</p>
       </div>
       <button
         type="submit"
@@ -56,15 +61,23 @@
         시작하기 
       </button>
     </div>
+			
 		
 
 	<footer class="footer">
 		<div class="container">
 			<div class="text-muted">OpenVidu © 2021</div>
+			<a href="http://www.openvidu.io/" target="_blank"><img class="openvidu-logo" src="images/openvidu_globe_bg_transp_cropped.png"/></a>
 		</div>
 	</footer>
-	
+
+
+
+
+
+	 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	<script src="/auth.js"></script>
+	
 
 </body>
 
