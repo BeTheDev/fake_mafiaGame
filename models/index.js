@@ -1,17 +1,22 @@
-const mongoose = require("mongoose")
+const Sequelize = require("sequelize")
+const env = process.env.NODE_ENV || "development"
+const config = require("../config/config")[env]
+const db = {}
 
-const connect = () => {
-  mongoose.connect(
-    "mongodb://localhost:27017/fakeMafia",
-    { ignoreUndefined: true },
-    (error) => {
-      if (error) {
-        console.log("mongodb error", error)
-      } else {
-        console.log("connected")
-      }
-    }
-  )
-}
+const sequelize = new Sequelize(config.database, config.username, config.password, config)
 
-module.exports = connect
+db.User = require("./user")(sequelize, Sequelize)
+db.Room = require("./room")(sequelize, Sequelize)
+db.GameResult = require("./gameResult")(sequelize, Sequelize)
+db.GameGroup = require("./gameGroup")(sequelize, Sequelize)
+
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db)
+  }
+})
+
+db.sequelize = sequelize
+db.Sequelize = Sequelize
+
+module.exports = db
