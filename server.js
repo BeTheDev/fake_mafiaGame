@@ -55,24 +55,24 @@ var options = {
 }
 https.createServer(options, app).listen(5000)
 
-// Mock database
-var users = [
-  {
-    user: "publisher1",
-    pass: "pass",
-    role: OpenViduRole.PUBLISHER,
-  },
-  {
-    user: "publisher2",
-    pass: "pass",
-    role: OpenViduRole.PUBLISHER,
-  },
-  {
-    user: "subscriber",
-    pass: "pass",
-    role: OpenViduRole.SUBSCRIBER,
-  },
-]
+// // Mock database
+// var users = [
+//   {
+//     user: "publisher1",
+//     pass: "pass",
+//     role: OpenViduRole.PUBLISHER,
+//   },
+//   {
+//     user: "publisher2",
+//     pass: "pass",
+//     role: OpenViduRole.PUBLISHER,
+//   },
+//   {
+//     user: "subscriber",
+//     pass: "pass",
+//     role: OpenViduRole.SUBSCRIBER,
+//   },
+// ]
 
 // Environment variable: URL where our OpenVidu server is listening
 var OPENVIDU_URL = process.argv[2]
